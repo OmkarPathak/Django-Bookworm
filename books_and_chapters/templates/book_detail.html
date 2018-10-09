@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            {% if book_detail %}
+                <h1>{{ book_detail.book_name }}</h1>
+                <h3 class="row">
+                    <i class="blockquote-footer col">{{ book_detail.author_name }}</i>
+                    <p class="col" style="color: gray; font-size: 20px;">You read this on: {{ book_detail.book_read_on }}</p>
+                </h3>
+                <hr>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
