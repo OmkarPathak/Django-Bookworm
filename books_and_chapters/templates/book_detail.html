@@ -5,14 +5,71 @@
     <div class="row">
         <div class="col-lg-12 col-md-12">
             {% if book_detail %}
-                <h1>{{ book_detail.book_name }}</h1>
+                <h1>
+                    {{ book_detail.book_name }}
+                    <span class="float-right">
+                        <span class="btn btn-primary">
+                            <a class="open-modal" data-url="{% url 'book_details_edit' book_detail.id %}" style="text-decoration: none; color: white">Edit</a>
+                        </span>
+                        <span class="btn btn-danger" data-toggle="modal" data-target="#delete_book_confirmation">
+                            Delete
+                        </span>
+                    </span>
+                </h1>
                 <h3 class="row">
                     <i class="blockquote-footer col">{{ book_detail.author_name }}</i>
-                    <p class="col" style="color: gray; font-size: 20px;">You read this on: {{ book_detail.book_read_on }}</p>
+                    <p class="col" style="color: gray; font-size: 20px;"><span class="float-right">You read this on: {{ book_detail.book_read_on }}</span></p>
                 </h3>
                 <hr>
             {% endif %}
         </div>
     </div>
 </div>
+
+<!-- The Delete Modal -->
+<div class="modal" id="delete_book_confirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h4 class="modal-title">Confirm Deletion</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <div class="row container">
+                <h3>Are you sure you want to delete "{{ book_detail.book_name }}"?</h3>
+            </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Cancel">
+            <button type="button" class="btn btn-danger"><a href="{% url 'delete_single_book' book_detail.id %}" style="text-decoration: none; color: white">Delete</a></button>
+        </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-div"></div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var modalDiv = $(".modal-div");
+    $(".open-modal").on("click", function() {
+    // alert($(this).attr("data-url"));
+    $.ajax({
+        type: 'GET',
+        url: $(this).attr("data-url"),
+        success: function(data) {
+            modalDiv.html(data);
+            // alert('yes');
+            $("#edit_book").modal();
+        }
+    });
+    });
+</script>
 {% endblock %}

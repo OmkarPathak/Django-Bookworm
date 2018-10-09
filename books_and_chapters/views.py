@@ -38,6 +38,21 @@ def book_detail(request, pk):
     }
     return render(request, 'book_detail.html', context)
 
+def edit_book_details(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('book_detail', pk=book.id)
+    else:
+        form = BookForm(initial={
+            'book_name': book.book_name,
+            'author_name': book.author_name,
+            'book_read_on': book.book_read_on
+        }, instance=book)
+        return render(request, 'book_detail_edit_modal.html', {'form': form})
+
 def delete_single_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     book.delete()

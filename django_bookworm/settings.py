@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'rest_framework',
     'rest_framework.authtoken',
     'books_and_chapters',
@@ -137,3 +138,6 @@ REST_FRAMEWORK = {
 LOGIN_REDIRECT_URL = '/books/'
 
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# Bootstrap Crispy-Forms config
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
