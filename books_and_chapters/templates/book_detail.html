@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container">
@@ -24,10 +25,34 @@
             {% endif %}
         </div>
     </div>
+
+    <div class="row container">
+        <h3 style="margin-right: 10px;">Chapters</h3> 
+        <a id="a_d" class="btn btn-primary float-right" style="border-radius: 45%; color: white; padding-left: 10px; padding-right: 10px; margin-bottom: 5px;"  data-toggle="modal" data-target="#add_chapter">&#43;</a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            {% for chapter in chapters %}
+                <div class="card btn-block" style="margin-top: 10px; border-radius: 0px; padding: 10px; background-color: #fafafa">
+                    <a href="" data-toggle="collapse" data-target="#{{ chapter.id }}" style="text-decoration: none;">Chapter {{ chapter.chapter_number }}</a>
+                    <div class="collapse" id="{{ chapter.id }}">
+                        <div class="" style="border-radius: 0;">
+                        <div class="row">
+                            <div class="col">
+                                {{ chapter.description }}
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
 <!-- The Delete Modal -->
-<div class="modal" id="delete_book_confirmation">
+<div class="modal fade" id="delete_book_confirmation">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -54,6 +79,44 @@
     </div>
 </div>
 <div class="modal-div"></div>
+
+ <!-- Add Chapter Modal -->
+ <div class="modal fade" id="add_chapter">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Add New Chapter for "{{ book_detail.book_name }}"</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <form action="{% url 'add_chapter' %}" method="post">
+        <input type="hidden" name="pk" id="pk" value="{{ book_detail.id }}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="container">
+            {{ add_chapter_form|crispy }}
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-success" value="Add">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  {% if form_error %}
+  <script>
+        $("#add_chapter").modal("show");
+  </script>
+  {% endif %}
 {% endblock %}
 
 {% block javascript %}

@@ -19,6 +19,7 @@
         <div class="col-lg-6 col-md-6 offset-md-3">
                 <form method="post" class="form" action="{% url 'login' %}">
                     {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}" />
                     <div class="row">
                         <div class="form-group col">
                             <label for="username">{{ form.username.label }}</label>

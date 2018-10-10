@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Book, Chapter, BookForm
+from .models import Book, Chapter, BookForm, ChapterForm
 from django.contrib import messages
 
 def homepage(request):
@@ -27,14 +27,23 @@ def homepage(request):
         }
         return render(request, 'base.html', context)
 
-def book_detail(request, pk):
+def get_book_details(request, pk):
     book = get_object_or_404(Book, pk=pk)
+    try:
+        chapter = Chapter.objects.filter(book=book).order_by('chapter_number')
+    except Chapter.DoesNotExist:
+        chapter = None
     books = Book.objects.all()
     add_book_form = BookForm()
+    add_chapter_form = ChapterForm(initial={
+        'book': book
+    })
     context = {
         'books': books,
+        'chapters': chapter,
         'book_detail': book,
         'add_book_form': add_book_form,
+        'add_chapter_form': add_chapter_form,
     }
     return render(request, 'book_detail.html', context)
 
@@ -53,7 +62,29 @@ def edit_book_details(request, pk):
         }, instance=book)
         return render(request, 'book_detail_edit_modal.html', {'form': form})
 
-def delete_single_book(request, pk):
+def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     book.delete()
     return redirect('books')
+
+def add_chapter(request):
+    form_error = False
+    if request.method == 'POST':
+        book = get_object_or_404(Book, pk=request.POST.get('pk'))
+        form = ChapterForm(request.POST)
+        print(form)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.book = book
+            form.save()
+            messages.success(request, 'Chapter added successfully!')
+            return redirect('book_detail', pk=book.id)
+        else:
+            form_error = True
+        context = {
+            'books': Book.objects.all(),
+            'book_detail': book,
+            'add_chapter_form': form,
+            'form_error': form_error
+        }
+        return render(request, 'book_detail.html', context)

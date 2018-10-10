@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('accounts/signup/', views.signup, name='signup'),
-    path('accounts/login/', LoginView.as_view(redirect_authenticated_user=True)),
+    path('accounts/login/', LoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('books_and_chapters.urls'))
 ]

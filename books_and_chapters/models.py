@@ -13,12 +13,12 @@ class Book(models.Model):
 
 
 class Chapter(models.Model):
-    book            = models.OneToOneField(Book, on_delete=models.CASCADE)
+    book            = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter_number  = models.IntegerField()
     description     = models.TextField()
 
     def __str__(self):
-        return self.book.book_name + ': ' + self.chapter_number
+        return self.book.book_name + ': ' + str(self.chapter_number)
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -30,3 +30,8 @@ class BookForm(forms.ModelForm):
         widgets = {
             'book_read_on': DateInput()
         }
+
+class ChapterForm(forms.ModelForm):
+    class Meta:
+        model = Chapter
+        fields = '__all__'
