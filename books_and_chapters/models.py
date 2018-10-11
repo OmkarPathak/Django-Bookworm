@@ -34,4 +34,4 @@ class BookForm(forms.ModelForm):
 class ChapterForm(forms.ModelForm):
     class Meta:
         model = Chapter
-        fields = '__all__'
+        fields = ['chapter_number', 'description']

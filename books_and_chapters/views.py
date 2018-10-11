@@ -60,7 +60,7 @@ def edit_book_details(request, pk):
             'author_name': book.author_name,
             'book_read_on': book.book_read_on
         }, instance=book)
-        return render(request, 'book_detail_edit_modal.html', {'form': form})
+        return render(request, 'modals/book_detail_edit_modal.html', {'form': form})
 
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
@@ -72,7 +72,6 @@ def add_chapter(request):
     if request.method == 'POST':
         book = get_object_or_404(Book, pk=request.POST.get('pk'))
         form = ChapterForm(request.POST)
-        print(form)
         if form.is_valid():
             form = form.save(commit=False)
             form.book = book
@@ -88,3 +87,26 @@ def add_chapter(request):
             'form_error': form_error
         }
         return render(request, 'book_detail.html', context)
+
+def edit_chapter(request, pk):
+    chapter = get_object_or_404(Chapter, pk=pk)
+    if request.method == 'POST':
+        chapter = Chapter.objects.get(pk=pk)
+        form = ChapterForm(request.POST, instance=chapter)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Chapter edited!')
+            return redirect('book_detail', pk=chapter.book.id)
+    else:
+        form = ChapterForm(initial={
+            'book':chapter.book,
+            'chapter_number':chapter.chapter_number,
+            'description':chapter.description
+        }, instance=chapter)
+        return render(request, 'modals/chapter_edit_modal.html', {'form': form})
+
+def delete_chapter(request, pk):
+    chapter = get_object_or_404(Chapter, pk=pk)
+    chapter.delete()
+    messages.success(request, 'Chapter deleted!')
+    return redirect('book_detail', pk=chapter.book.id)

@@ -10,10 +10,10 @@
                     {{ book_detail.book_name }}
                     <span class="float-right">
                         <span class="btn btn-primary">
-                            <a class="open-modal" data-url="{% url 'book_details_edit' book_detail.id %}" style="text-decoration: none; color: white">Edit</a>
+                            <a class="open-modal" data-url="{% url 'book_details_edit' book_detail.id %}" style="text-decoration: none; color: white"><i class="far fa-edit"> </i> Edit</a>
                         </span>
                         <span class="btn btn-danger" data-toggle="modal" data-target="#delete_book_confirmation">
-                            Delete
+                            <i class="far fa-trash-alt"> </i> Delete
                         </span>
                     </span>
                 </h1>
@@ -28,18 +28,24 @@
 
     <div class="row container">
         <h3 style="margin-right: 10px;">Chapters</h3> 
-        <a id="a_d" class="btn btn-primary float-right" style="border-radius: 45%; color: white; padding-left: 10px; padding-right: 10px; margin-bottom: 5px;"  data-toggle="modal" data-target="#add_chapter">&#43;</a>
+        <a id="a_d" class="btn float-right" style="font-size: 25px; color: blue; padding-top: 0;" data-toggle="modal" data-target="#add_chapter"><i class="far fa-plus-square"></i></a>
     </div>
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
             {% for chapter in chapters %}
-                <div class="card btn-block" style="margin-top: 10px; border-radius: 0px; padding: 10px; background-color: #fafafa">
-                    <a href="" data-toggle="collapse" data-target="#{{ chapter.id }}" style="text-decoration: none;">Chapter {{ chapter.chapter_number }}</a>
+                <div class="card btn-block" style="margin-top: 10px; border-radius: 0px; padding: 10px; background-color: #fafafa; color: blue; cursor: pointer;">
+                    <div data-toggle="collapse" data-target="#{{ chapter.id }}" style="text-decoration: none;">Chapter {{ chapter.chapter_number }} 
+                        <i class="fas fa-caret-down"></i>
+                        <div class="float-right">
+                            <span><a data-url="{% url 'edit_chapter' chapter.id %}" class="chapter-edit-modal"><i class="far fa-edit"></i></a></span>
+                            <span><a href="{% url 'delete_chapter' chapter.id %}"><i class="far fa-trash-alt"></i></a></span>
+                        </div>
+                    </div>
                     <div class="collapse" id="{{ chapter.id }}">
                         <div class="" style="border-radius: 0;">
                         <div class="row">
-                            <div class="col">
+                            <div class="col" style=" color: black">
                                 {{ chapter.description }}
                             </div>
                         </div>
@@ -51,7 +57,7 @@
     </div>
 </div>
 
-<!-- The Delete Modal -->
+<!-- Delete Book Modal -->
 <div class="modal fade" id="delete_book_confirmation">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -78,6 +84,36 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Chapter Modal -->
+<div class="modal fade" id="delete_chapter_confirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h4 class="modal-title">Confirm Deletion</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <div class="row container">
+                <h5>Are you sure you want to delete this chapter?</h5>
+            </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Cancel">
+            <button type="button" class="btn btn-danger"><a href="" id="d_c1" style="text-decoration: none; color: white">Delete</a></button>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- The result get appended here -->
 <div class="modal-div"></div>
 
  <!-- Add Chapter Modal -->
@@ -123,13 +159,25 @@
 <script>
     var modalDiv = $(".modal-div");
     $(".open-modal").on("click", function() {
-    // alert($(this).attr("data-url"));
     $.ajax({
         type: 'GET',
         url: $(this).attr("data-url"),
         success: function(data) {
             modalDiv.html(data);
-            // alert('yes');
+            $("#edit_book").modal();
+        }
+    });
+    });
+</script>
+
+<script>
+    var modalDiv = $(".modal-div");
+    $(".chapter-edit-modal").on("click", function() {
+    $.ajax({
+        type: 'GET',
+        url: $(this).attr("data-url"),
+        success: function(data) {
+            modalDiv.html(data);
             $("#edit_book").modal();
         }
     });

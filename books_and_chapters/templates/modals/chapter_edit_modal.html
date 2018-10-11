@@ -1,0 +1,23 @@
+{% load crispy_forms_tags %}
+<div id="edit_book" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit "{{ form.instance.chapter_number }}"</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'edit_chapter' form.instance.id %}">
+                <div class="modal-body">
+                        {% csrf_token %}
+                        {{ form|crispy }}      
+                </div>
+                <div class="modal-footer">
+                        <input class="btn btn-primary" type="submit" value="Save Changes"/>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
