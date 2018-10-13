@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Book, Chapter, BookForm, ChapterForm
 from django.contrib import messages
+from .summarize import Summarizer
 import json
 
 def homepage(request):
@@ -19,7 +20,7 @@ def homepage(request):
             'add_book_form': form,
             'form_error': form_error
         }
-        return render(request, 'base.html', context)
+        return render(request, 'books.html', context)
     else:
         add_book_form = BookForm()
         context = {
@@ -27,7 +28,7 @@ def homepage(request):
             'add_book_form': add_book_form,
             'form_error': form_error
         }
-        return render(request, 'base.html', context)
+        return render(request, 'books.html', context)
 
 def get_book_details(request, pk):
     book = get_object_or_404(Book, pk=pk)
@@ -35,6 +36,13 @@ def get_book_details(request, pk):
         chapter = Chapter.objects.filter(book=book).order_by('chapter_number')
     except Chapter.DoesNotExist:
         chapter = None
+    if chapter:
+        text = ''
+        for chap in chapter:
+            text += chap.description
+        summary = Summarizer(text).get_summary(len(chapter))
+    else:
+        summary = ''
     books = Book.objects.all()
     add_book_form = BookForm()
     add_chapter_form = ChapterForm(initial={
@@ -46,6 +54,7 @@ def get_book_details(request, pk):
         'book_detail': book,
         'add_book_form': add_book_form,
         'add_chapter_form': add_chapter_form,
+        'summary': summary,
     }
     return render(request, 'book_detail.html', context)
 

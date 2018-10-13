@@ -28,6 +28,14 @@
 
     <div class="row container">
         <div class="container">{% include 'messages.html' %}</div>
+        <div>
+            {% if summary %}
+                <div class="jumbotron" style="padding: 15px; border-radius: 0px;">
+                    <b>Summary:</b> {{ summary }}
+                </div>
+                <hr>
+            {% endif %}
+        </div>
         <h3 style="margin-right: 10px;">Chapters</h3> 
         <a id="a_d" class="btn float-right" style="font-size: 25px; color: blue; padding-top: 0;" data-toggle="modal" data-target="#add_chapter"><i class="fas fa-plus" data-toggle="tooltip" title="Add a new chapter"></i></a>
     </div>
