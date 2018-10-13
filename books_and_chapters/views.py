@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
 from .models import Book, Chapter, BookForm, ChapterForm
 from django.contrib import messages
+import json
 
 def homepage(request):
     books = Book.objects.all()
@@ -110,3 +112,23 @@ def delete_chapter(request, pk):
     chapter.delete()
     messages.success(request, 'Chapter deleted!')
     return redirect('book_detail', pk=chapter.book.id)
+
+def search_book(request):
+    if request.is_ajax():
+        q = request.GET.get('term')
+        books = Book.objects.filter(book_name__icontains=q)[:10]
+        results = []
+        for book in books:
+            book_json = {}
+            book_json['id'] = book.id
+            book_json['label'] = book.book_name
+            book_json['value'] = book.book_name
+            results.append(book_json)
+        data = json.dumps(results)
+    else:
+        book_json = {}
+        book_json['id'] = 0
+        book_json['label'] = None
+        book_json['value'] = None
+        data = json.dumps(book_json)
+    return HttpResponse(data)

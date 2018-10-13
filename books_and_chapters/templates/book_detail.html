@@ -27,25 +27,28 @@
     </div>
 
     <div class="row container">
+        <div class="container">{% include 'messages.html' %}</div>
         <h3 style="margin-right: 10px;">Chapters</h3> 
-        <a id="a_d" class="btn float-right" style="font-size: 25px; color: blue; padding-top: 0;" data-toggle="modal" data-target="#add_chapter"><i class="far fa-plus-square"></i></a>
+        <a id="a_d" class="btn float-right" style="font-size: 25px; color: blue; padding-top: 0;" data-toggle="modal" data-target="#add_chapter"><i class="fas fa-plus" data-toggle="tooltip" title="Add a new chapter"></i></a>
     </div>
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
+            {% if chapters %}
             {% for chapter in chapters %}
                 <div class="card btn-block" style="margin-top: 10px; border-radius: 0px; padding: 10px; background-color: #fafafa; color: blue; cursor: pointer;">
                     <div data-toggle="collapse" data-target="#{{ chapter.id }}" style="text-decoration: none;">Chapter {{ chapter.chapter_number }} 
-                        <i class="fas fa-caret-down"></i>
+                        <i class="fas fa-caret-down" data-toggle="tooltip" title="Show More"></i>
                         <div class="float-right">
-                            <span><a data-url="{% url 'edit_chapter' chapter.id %}" class="chapter-edit-modal"><i class="far fa-edit"></i></a></span>
-                            <span><a href="{% url 'delete_chapter' chapter.id %}"><i class="far fa-trash-alt"></i></a></span>
+                            <span><a data-url="{% url 'edit_chapter' chapter.id %}" class="chapter-edit-modal"><i class="far fa-edit" data-toggle="tooltip" title="Edit"></i></a></span>
+                            <span><a href="{% url 'delete_chapter' chapter.id %}"><i class="far fa-trash-alt" data-toggle="tooltip" title="Delete"></i></a></span>
                         </div>
                     </div>
                     <div class="collapse" id="{{ chapter.id }}">
                         <div class="" style="border-radius: 0;">
                         <div class="row">
                             <div class="col" style=" color: black">
+                                <hr>
                                 {{ chapter.description }}
                             </div>
                         </div>
@@ -53,6 +56,20 @@
                     </div>
                 </div>
             {% endfor %}
+            {% else %}
+            <div class="alert alert-danger">
+                <div class="row text-center">
+                    <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                    <div class="col-lg-4 col-md-4 col-sm-4"><p><i class="far fa-frown" style="font-size: 30px;"></i></p></div>
+                </div>
+                <div class="row text-center">
+                    <p>
+                        Seems like you have just started to read this book. Common, get a pace 
+                        and fill me up
+                    </p>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

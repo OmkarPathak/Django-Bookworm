@@ -26,5 +26,6 @@ urlpatterns = [
     path('chapters/add/', views.add_chapter, name='add_chapter'),
     path('chapters/<int:pk>/delete/', views.delete_chapter, name='delete_chapter'),
     path('chapters/<int:pk>/edit/', views.edit_chapter, name='edit_chapter'),
+    path('books/search/', views.search_book, name='search_book'),
     path('', RedirectView.as_view(url='/accounts/login/', permanent=False))
 ]
