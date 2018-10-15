@@ -4,9 +4,9 @@ from django.shortcuts import reverse
 register = template.Library()
 
 @register.simple_tag
-def add_active(request, name, pk):
-    if pk:
-        path = reverse(name, kwargs={'pk': pk})
+def add_active(request, name, slug):
+    if slug:
+        path = reverse(name, kwargs={'slug': slug})
     else :
         path = reverse(name)
     print(path)

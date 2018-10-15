@@ -20,12 +20,12 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('books/', login_required(views.homepage), name='books'),       # for adding a new book
-    path('books/<int:pk>/', login_required(views.get_book_details), name='book_detail'),
+    path('books/search/', views.search_book, name='search_book'),
+    path('books/<slug:slug>/', login_required(views.get_book_details), name='book_detail'),
     path('books/<int:pk>/delete/', login_required(views.delete_book), name='delete_single_book'),
     path('books/<int:pk>/edit/', login_required(views.edit_book_details), name='book_details_edit'),
     path('chapters/add/', views.add_chapter, name='add_chapter'),
     path('chapters/<int:pk>/delete/', views.delete_chapter, name='delete_chapter'),
     path('chapters/<int:pk>/edit/', views.edit_chapter, name='edit_chapter'),
-    path('books/search/', views.search_book, name='search_book'),
     path('', RedirectView.as_view(url='/accounts/login/', permanent=False))
 ]

@@ -16,6 +16,9 @@ class Summarizer(object):
         self.__f_text      = self.create_formatted_text()
         self.__word_freq   = self.calc_word_frequencies()
 
+    def get_lenth(self):
+        return len(self.__sentence)
+
     def create_formatted_text(self):
         '''
             removes digits, spaces and special symbols from sentences
@@ -49,7 +52,7 @@ class Summarizer(object):
 
         return word_frequencies
 
-    def get_summary(self, number_of_sentences):
+    def get_summary(self, number_of_sentences=5):
         '''
             generates summary based on weighted word frequencies
 

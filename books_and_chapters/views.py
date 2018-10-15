@@ -30,8 +30,8 @@ def homepage(request):
         }
         return render(request, 'books.html', context)
 
-def get_book_details(request, pk):
-    book = get_object_or_404(Book, pk=pk)
+def get_book_details(request, slug):
+    book = get_object_or_404(Book, slug=slug)
     try:
         chapter = Chapter.objects.filter(book=book).order_by('chapter_number')
     except Chapter.DoesNotExist:
@@ -40,7 +40,8 @@ def get_book_details(request, pk):
         text = ''
         for chap in chapter:
             text += chap.description
-        summary = Summarizer(text).get_summary(len(chapter))
+        summarizer = Summarizer(text)
+        summary = summarizer.get_summary(int(summarizer.get_lenth() * 0.4))
     else:
         summary = ''
     books = Book.objects.all()
@@ -64,7 +65,7 @@ def edit_book_details(request, pk):
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
             form.save()
-            return redirect('book_detail', pk=book.id)
+            return redirect('book_detail', slug=book.slug)
     else:
         form = BookForm(initial={
             'book_name': book.book_name,
@@ -88,7 +89,7 @@ def add_chapter(request):
             form.book = book
             form.save()
             messages.success(request, 'Chapter added successfully!')
-            return redirect('book_detail', pk=book.id)
+            return redirect('book_detail', slug=book.slug)
         else:
             form_error = True
         context = {
@@ -107,7 +108,7 @@ def edit_chapter(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Chapter edited!')
-            return redirect('book_detail', pk=chapter.book.id)
+            return redirect('book_detail', slug=chapter.book.slug)
     else:
         form = ChapterForm(initial={
             'book':chapter.book,
@@ -120,7 +121,7 @@ def delete_chapter(request, pk):
     chapter = get_object_or_404(Chapter, pk=pk)
     chapter.delete()
     messages.success(request, 'Chapter deleted!')
-    return redirect('book_detail', pk=chapter.book.id)
+    return redirect('book_detail', slug=chapter.book.slug)
 
 def search_book(request):
     if request.is_ajax():
@@ -129,14 +130,14 @@ def search_book(request):
         results = []
         for book in books:
             book_json = {}
-            book_json['id'] = book.id
+            book_json['slug'] = book.slug
             book_json['label'] = book.book_name
             book_json['value'] = book.book_name
             results.append(book_json)
         data = json.dumps(results)
     else:
         book_json = {}
-        book_json['id'] = 0
+        book_json['slug'] = None
         book_json['label'] = None
         book_json['value'] = None
         data = json.dumps(book_json)

@@ -46,7 +46,7 @@
               <ul class="nav nav-pills flex-column">
                 {% for book in books %}
                 <li class="nav-item" id="book_details">
-                  <a href="{% url 'book_detail' book.id %}" class="{% add_active request 'book_detail' book.id %} nav-link">{{ book.book_name }}</a>
+                  <a href="{% url 'book_detail' book.slug %}" class="{% add_active request 'book_detail' book.slug %} nav-link">{{ book.book_name }}</a>
                 </li>
                 {% endfor %}
               </ul>
@@ -123,7 +123,7 @@
           minLength: 2,
           select: function (value, data) {
             // console.log();
-            window.location.replace("/books/" + data['item']['id']);
+            window.location.replace("/books/" + data['item']['slug'] + "/");
           }
         });
       });
