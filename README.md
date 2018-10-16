@@ -23,3 +23,7 @@ A fun project to store my learning from each book that I read.
     python manage.py migrate
     python manage.py runserver
     ```
+
+# Working
+
+![Working](result.gif)

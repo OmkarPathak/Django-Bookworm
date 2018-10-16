@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-
+{% block title %}{{ book_detail.book_name }}{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -18,8 +18,8 @@
                     </span>
                 </h1>
                 <h3 class="row">
-                    <i class="blockquote-footer col">{{ book_detail.author_name }}</i>
-                    <p class="col" style="color: gray; font-size: 20px;"><span class="float-right">You read this on: {{ book_detail.book_read_on }}</span></p>
+                    <i class="blockquote-footer col-lg-6 col-md-6 col-sm-12">{{ book_detail.author_name }}</i>
+                    <p class="col-lg-6 col-md-6 col-sm-12" style="color: gray; font-size: 20px;"><span class="float-right">You read this on: {{ book_detail.book_read_on }}</span></p>
                 </h3>
                 <hr>
             {% endif %}
