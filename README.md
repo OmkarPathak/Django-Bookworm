@@ -18,6 +18,10 @@ A fun project to store my learning from each book that I read.
     ```bash
     python prerequisites.py
     ```
+- Then create a file named `.env` inside `django_bookworm/` and add following details with your details
+    ```
+    SECRET_KEY=<your_secret_key>
+    ```
 - Now, you can start the django server by executing following commands:
     ```bash
     python manage.py migrate
