@@ -5,6 +5,8 @@ A fun project to store my learning from each book that I read.
 - Easy to use GUI
 - Chapter-wise bifurcation
 - Generate summary from whatever your learning from each chapter are
+- Get basic statistics about the books you read
+- Get inspirational quotes on your homepage
 
 # Installation
 

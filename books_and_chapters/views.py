@@ -4,10 +4,26 @@ from .models import Book, Chapter, BookForm, ChapterForm
 from django.contrib import messages
 from .summarize import Summarizer
 import json
+from datetime import datetime, timedelta
+import pickle, random
+import os
+
+
+def get_random_quote():
+    module_dir = os.path.dirname(__file__)  # get current directory
+    file_path = os.path.join(module_dir, 'quotes_dump.pckl')
+    with open(file_path, 'rb') as file:
+        obj = pickle.load(file)
+        quote = random.choice(obj)
+        return quote
 
 def homepage(request):
-    books = Book.objects.all()
+    books = Book.objects.all().order_by('book_read_on')
     form_error = False
+    last_month = datetime.today() - timedelta(days=30)
+    last_month_books_count = Book.objects.filter(book_read_on__gt=last_month).count()
+    total_chapters = Chapter.objects.all().count()
+    quote = get_random_quote()
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
@@ -15,20 +31,18 @@ def homepage(request):
             messages.success(request, 'Book added successfully!')
         else:
             form_error = True
-        context = {
-            'books': books,
-            'add_book_form': form,
-            'form_error': form_error
-        }
-        return render(request, 'books.html', context)
     else:
-        add_book_form = BookForm()
-        context = {
-            'books': books,
-            'add_book_form': add_book_form,
-            'form_error': form_error
-        }
-        return render(request, 'books.html', context)
+        form = BookForm()
+    context = {
+        'quote': quote,
+        'books': books,
+        'add_book_form': form,
+        'form_error': form_error,
+        'last_month_books_count': last_month_books_count,
+        'total_chapters': total_chapters,
+        'total_books': len(books),
+    }
+    return render(request, 'books.html', context)
 
 def get_book_details(request, slug):
     book = get_object_or_404(Book, slug=slug)
@@ -44,7 +58,7 @@ def get_book_details(request, slug):
         summary = summarizer.get_summary(int(summarizer.get_lenth() * 0.4))
     else:
         summary = ''
-    books = Book.objects.all()
+    books = Book.objects.all().order_by('book_read_on')
     add_book_form = BookForm()
     add_chapter_form = ChapterForm(initial={
         'book': book

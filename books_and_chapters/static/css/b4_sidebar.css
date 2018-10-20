@@ -119,3 +119,14 @@ overflow:auto;
     -moz-border-radius: 0px;
     background-image: none;
 }
+
+#book-homepage .card{
+    border-radius: 0px;
+    box-shadow: 5px 8px 8px gray;
+}
+
+@media only screen and (max-width: 768px){
+    .col-sm-12{
+        margin-bottom: 5%;
+    }
+}
