@@ -53,7 +53,7 @@ def homepage(request):
 def get_book_details(request, slug):
     book = get_object_or_404(Book, slug=slug)
     if book.added_by_user != request.user:
-        messages.error(request, 'You are not authenticated to view this')
+        messages.error(request, 'You are not authenticated to perform this action')
         return redirect('books')
     try:
         chapter = Chapter.objects.filter(book=book).order_by('chapter_number')
@@ -84,6 +84,9 @@ def get_book_details(request, slug):
 
 def edit_book_details(request, pk):
     book = get_object_or_404(Book, pk=pk)
+    if book.added_by_user != request.user:
+        messages.error(request, 'You are not authenticated to perform this action')
+        return redirect('books')
     if request.method == 'POST':
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
@@ -99,6 +102,9 @@ def edit_book_details(request, pk):
 
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
+    if book.added_by_user != request.user:
+        messages.error(request, 'You are not authenticated to perform this action')
+        return redirect('books')
     book.delete()
     return redirect('books')
 
@@ -106,6 +112,9 @@ def add_chapter(request):
     form_error = False
     if request.method == 'POST':
         book = get_object_or_404(Book, pk=request.POST.get('pk'))
+        if book.added_by_user != request.user:
+            messages.error(request, 'You are not authenticated to perform this action')
+            return redirect('books')
         form = ChapterForm(request.POST)
         if form.is_valid():
             form = form.save(commit=False)
@@ -125,6 +134,9 @@ def add_chapter(request):
 
 def edit_chapter(request, pk):
     chapter = get_object_or_404(Chapter, pk=pk)
+    if chapter.book.added_by_user != request.user:
+        messages.error(request, 'You are not authenticated to perform this action')
+        return redirect('books')
     if request.method == 'POST':
         chapter = Chapter.objects.get(pk=pk)
         form = ChapterForm(request.POST, instance=chapter)
@@ -142,6 +154,9 @@ def edit_chapter(request, pk):
 
 def delete_chapter(request, pk):
     chapter = get_object_or_404(Chapter, pk=pk)
+    if chapter.book.added_by_user != request.user:
+        messages.error(request, 'You are not authenticated to perform this action')
+        return redirect('books')
     chapter.delete()
     messages.success(request, 'Chapter deleted!')
     return redirect('book_detail', slug=chapter.book.slug)
