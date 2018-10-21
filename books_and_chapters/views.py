@@ -18,16 +18,22 @@ def get_random_quote():
         return quote
 
 def homepage(request):
-    books = Book.objects.all().order_by('book_read_on')
+    books = Book.objects.filter(added_by_user=request.user).order_by('book_read_on')
     form_error = False
     last_month = datetime.today() - timedelta(days=30)
-    last_month_books_count = Book.objects.filter(book_read_on__gt=last_month).count()
-    total_chapters = Chapter.objects.all().count()
+    last_month_books_count = Book.objects.filter(
+            added_by_user=request.user,
+            book_read_on__gt=last_month
+        ).count()
+    total_chapters = Chapter.objects.filter(book__added_by_user=request.user).count()
     quote = get_random_quote()
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
+            form = form.save(commit=False)
+            form.added_by_user = request.user
             form.save()
+            form = BookForm()
             messages.success(request, 'Book added successfully!')
         else:
             form_error = True
@@ -46,6 +52,9 @@ def homepage(request):
 
 def get_book_details(request, slug):
     book = get_object_or_404(Book, slug=slug)
+    if book.added_by_user != request.user:
+        messages.error(request, 'You are not authenticated to view this')
+        return redirect('books')
     try:
         chapter = Chapter.objects.filter(book=book).order_by('chapter_number')
     except Chapter.DoesNotExist:
@@ -58,7 +67,7 @@ def get_book_details(request, slug):
         summary = summarizer.get_summary(int(summarizer.get_lenth() * 0.4))
     else:
         summary = ''
-    books = Book.objects.all().order_by('book_read_on')
+    books = Book.objects.filter(added_by_user=request.user).order_by('book_read_on')
     add_book_form = BookForm()
     add_chapter_form = ChapterForm(initial={
         'book': book
@@ -140,7 +149,10 @@ def delete_chapter(request, pk):
 def search_book(request):
     if request.is_ajax():
         q = request.GET.get('term')
-        books = Book.objects.filter(book_name__icontains=q)[:10]
+        books = Book.objects.filter(
+                book_name__icontains=q,
+                added_by_user=request.user
+            )[:10]
         results = []
         for book in books:
             book_json = {}

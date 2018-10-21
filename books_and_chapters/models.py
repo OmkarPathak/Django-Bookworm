@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 def generate_unique_slug(_class, field):
     """
@@ -18,7 +19,8 @@ def generate_unique_slug(_class, field):
     return unique_slug
 
 class Book(models.Model):
-    book_name       = models.CharField(max_length=200, unique=True)
+    added_by_user   = models.ForeignKey(User, on_delete=models.CASCADE)
+    book_name       = models.CharField(max_length=200)
     author_name     = models.CharField(max_length=200)
     book_read_on    = models.DateField()
     created_at      = models.DateTimeField(auto_now_add=True)
@@ -52,7 +54,7 @@ class BookForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = '__all__'
-        exclude = ('slug',)
+        exclude = ('slug', 'added_by_user')
         widgets = {
             'book_read_on': DateInput()
         }
