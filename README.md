@@ -1,4 +1,4 @@
-<p align="left"><img src="logo/logomarkv2.png" alt="Django-Bookworm" height="120px"></p>
+![Bookworm](logo/bookworm.png)
 
 # Django-Bookworm
 A fun project to store my learning from each book that I read.
