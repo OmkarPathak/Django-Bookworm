@@ -1,5 +1,11 @@
 ![Bookworm](logo/bookworm.png)
 
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/OmkarPathak/Django-Bookworm/blob/master/LICENSE)
+
+![Python](https://img.shields.io/badge/Python-3.6-brightgreen.svg)
+
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)
+
 # Django-Bookworm
 A fun project to store my learning from each book that I read.
 
