@@ -35,3 +35,7 @@ A fun project to store my learning from each book that I read.
 # Working
 
 ![Working](result.gif)
+
+# Special Mentions
+
+- Special thanks to [@reallinfo](https://github.com/reallinfo) for the beautiful and thoughtful logo :smile:
